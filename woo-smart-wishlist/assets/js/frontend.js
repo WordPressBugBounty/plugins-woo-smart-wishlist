@@ -536,9 +536,36 @@
 
   // menu item
   $(document).
-      on('click touch', '.woosw-menu-item a, .woosw-menu a,.woosw-link a',
+      on('click touch',
+          '.woosw-menu-item a, .woosw-menu a, .woosw-link.woosw-link-auto a',
           function(e) {
             if (woosw_vars.menu_action === 'open_popup') {
+              e.preventDefault();
+
+              if ($('#woosw_wishlist').hasClass('woosw-loaded')) {
+                woosw_wishlist_show();
+              } else {
+                woosw_wishlist_load();
+              }
+            }
+          });
+
+  // link popup
+  $(document).on('click touch', '.woosw-link.woosw-link-popup a', function(e) {
+    e.preventDefault();
+
+    if ($('#woosw_wishlist').hasClass('woosw-loaded')) {
+      woosw_wishlist_show();
+    } else {
+      woosw_wishlist_load();
+    }
+  });
+
+  // account link
+  $(document).
+      on('click touch', '.woocommerce-MyAccount-navigation-link--wishlist a',
+          function(e) {
+            if (woosw_vars.page_myaccount === 'yes_popup') {
               e.preventDefault();
 
               if ($('#woosw_wishlist').hasClass('woosw-loaded')) {
@@ -618,11 +645,12 @@
           }
 
           if (response.count != null) {
-            if ($('#woosw_wishlist .woosw-items .woosw-item').length &&
-                ($('#woosw_wishlist .woosw-items .woosw-item').length !=
+            if ($(
+                    '#woosw_wishlist .woosw-items:not(.woosw-suggested-items) .woosw-item').length &&
+                ($('#woosw_wishlist .woosw-items:not(.woosw-suggested-items) .woosw-item').length !=
                     response.count)) {
               woosw_change_count(
-                  $('#woosw_wishlist .woosw-items .woosw-item').length);
+                  $('#woosw_wishlist .woosw-items:not(.woosw-suggested-items) .woosw-item').length);
             } else {
               woosw_change_count(response.count);
             }

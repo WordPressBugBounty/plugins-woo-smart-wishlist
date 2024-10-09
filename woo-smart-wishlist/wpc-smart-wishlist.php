@@ -3,7 +3,7 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buy later.
-Version: 4.9.2
+Version: 4.9.3
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
@@ -17,7 +17,7 @@ WC tested up to: 9.3
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '4.9.2' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '4.9.3' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -77,7 +77,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
 					add_action( 'admin_menu', [ $this, 'admin_menu' ] );
 
 					// my account
-					if ( self::get_setting( 'page_myaccount', 'yes' ) === 'yes' ) {
+					if ( self::get_setting( 'page_myaccount', 'yes' ) !== 'no' ) {
 						add_filter( 'woocommerce_account_menu_items', [ $this, 'account_items' ], 99 );
 						add_action( 'woocommerce_account_wishlist_endpoint', [ $this, 'account_endpoint' ], 99 );
 					}
@@ -178,7 +178,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
 					}
 
 					// my account page
-					if ( self::get_setting( 'page_myaccount', 'yes' ) === 'yes' ) {
+					if ( self::get_setting( 'page_myaccount', 'yes' ) !== 'no' ) {
 						add_rewrite_endpoint( 'wishlist', EP_PAGES );
 					}
 
@@ -784,10 +784,15 @@ if ( ! function_exists( 'woosw_init' ) ) {
 					return wp_kses_post( apply_filters( 'woosw_button_html', $output, $attrs['id'], $attrs ) );
 				}
 
-				function shortcode_link() {
-					$output = '<span class="woosw-link"><a href="' . esc_url( self::get_url() ) . '"><span class="woosw-link-inner" data-count="' . esc_attr( self::get_count() ) . '">' . esc_html( self::localization( 'link_label', esc_html__( 'Wishlist', 'woo-smart-wishlist' ) ) ) . '</span></a></span>';
+				function shortcode_link( $attrs ) {
+					$attrs = shortcode_atts( [
+						'type'  => 'auto',
+						'label' => self::localization( 'link_label', esc_html__( 'Wishlist', 'woo-smart-wishlist' ) )
+					], $attrs, 'woosw_link' );
 
-					return apply_filters( 'woosw_link_html', $output );
+					$output = '<span class="' . esc_attr( 'woosw-link woosw-link-' . $attrs['type'] ) . '"><a href="' . esc_url( self::get_url() ) . '"><span class="woosw-link-inner" data-count="' . esc_attr( self::get_count() ) . '">' . esc_html( $attrs['label'] ) . '</span></a></span>';
+
+					return apply_filters( 'woosw_link_html', $output, $attrs );
 				}
 
 				function shortcode_list( $attrs ) {
@@ -1432,10 +1437,11 @@ if ( ! function_exists( 'woosw_init' ) ) {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row"><?php esc_html_e( 'Add Wishlist page to My Account', 'woo-smart-wishlist' ); ?></th>
+                                            <th scope="row"><?php esc_html_e( 'Add Wishlist link to My Account', 'woo-smart-wishlist' ); ?></th>
                                             <td>
                                                 <label> <select name="woosw_settings[page_myaccount]">
-                                                        <option value="yes" <?php selected( $page_myaccount, 'yes' ); ?>><?php esc_html_e( 'Yes', 'woo-smart-wishlist' ); ?></option>
+                                                        <option value="yes" <?php selected( $page_myaccount, 'yes' ); ?>><?php esc_html_e( 'Yes, open wishlist page', 'woo-smart-wishlist' ); ?></option>
+                                                        <option value="yes_popup" <?php selected( $page_myaccount, 'yes_popup' ); ?>><?php esc_html_e( 'Yes, open wishlist popup', 'woo-smart-wishlist' ); ?></option>
                                                         <option value="no" <?php selected( $page_myaccount, 'no' ); ?>><?php esc_html_e( 'No', 'woo-smart-wishlist' ); ?></option>
                                                     </select> </label>
                                             </td>
@@ -1844,6 +1850,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
 					wp_localize_script( 'woosw-frontend', 'woosw_vars', [
 							'wc_ajax_url'         => WC_AJAX::get_endpoint( '%%endpoint%%' ),
 							'nonce'               => wp_create_nonce( 'woosw-security' ),
+							'page_myaccount'      => self::get_setting( 'page_myaccount', 'yes' ),
 							'menu_action'         => self::get_setting( 'menu_action', 'open_page' ),
 							'reload_count'        => self::get_setting( 'reload_count', 'no' ),
 							'perfect_scrollbar'   => self::get_setting( 'perfect_scrollbar', 'yes' ),
