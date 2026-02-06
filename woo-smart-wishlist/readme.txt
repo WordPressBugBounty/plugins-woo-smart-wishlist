@@ -3,8 +3,8 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, wishlist, wait-list
 Tested up to: 6.8
-Version: 5.0.3
-Stable tag: 5.0.3
+Version: 5.0.8
+Stable tag: 5.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,22 @@ Example:
 `echo do_shortcode('[woosw id="99"]');`
 
 == Changelog ==
+
+= 5.0.8 =
+* Fixed: Minor JS/CSS issues
+
+= 5.0.7 =
+* Updated: Optimized the code
+
+= 5.0.6 =
+* Added: Import/export settings
+* Updated: Compatible with WP 6.8 & Woo 10.3
+
+= 5.0.5 =
+* Fixed: Security vulnerability reported by Wordfence
+
+= 5.0.4 =
+* Fixed: Security vulnerability reported by Wordfence
 
 = 5.0.3 =
 * Fixed: Minor JS issue in the backend
