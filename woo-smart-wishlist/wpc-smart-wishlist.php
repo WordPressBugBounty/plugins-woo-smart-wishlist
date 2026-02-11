@@ -3,23 +3,23 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buying later.
-Version: 5.0.8
+Version: 5.0.9
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
 Domain Path: /languages/
 Requires Plugins: woocommerce
 Requires at least: 4.0
-Tested up to: 6.8
+Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 10.3
+WC tested up to: 10.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '5.0.8' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '5.0.9' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -518,7 +518,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                 }
 
                 function ajax_load_count() {
-                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'wishlist_load_count' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'load_count' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -535,13 +535,11 @@ if ( ! function_exists( 'woosw_init' ) ) {
                         $return['count']  = count( $products );
                     }
 
-                    do_action( 'wishlist_load_count', $key );
-
                     wp_send_json( $return );
                 }
 
                 function ajax_load_list() {
-                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'wishlist_load_list' ) ) {
+                    if ( ! apply_filters( 'woosw_disable_nonce_check', false, 'load_list' ) ) {
                         if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'woosw-security' ) ) {
                             die( 'Permissions check failed!' );
                         }
@@ -657,7 +655,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
 
                     $key = sanitize_text_field( $_POST['key'] ?? '' );
 
-                    if ( ! empty( $key ) && ( $user_id = get_current_user_id() ) ) {
+                    if ( ! empty( $key ) && ( $user_id = get_current_user_id() ) && self::can_edit( $key ) ) {
                         // delete key from a user
                         $keys = get_user_meta( $user_id, 'woosw_keys', true ) ?: [];
 
@@ -706,7 +704,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     $products = self::get_ids( $key );
                     $count    = count( $products );
 
-                    if ( ! empty( $key ) && ( $user_id = get_current_user_id() ) ) {
+                    if ( ! empty( $key ) && ( $user_id = get_current_user_id() ) && self::can_edit( $key ) ) {
                         update_user_meta( $user_id, 'woosw_key', $key );
 
                         // set cookie
