@@ -3,7 +3,7 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buying later.
-Version: 5.0.9
+Version: 5.1.0
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
@@ -12,14 +12,14 @@ Requires Plugins: woocommerce
 Requires at least: 4.0
 Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 10.4
+WC tested up to: 10.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '5.0.9' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '5.1.0' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -73,6 +73,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
 
                     // menu
                     add_action( 'admin_init', [ $this, 'register_settings' ] );
+                    add_filter( 'pre_update_option', [ $this, 'last_saved' ], 10, 2 );
                     add_action( 'admin_menu', [ $this, 'admin_menu' ] );
 
                     // my account
@@ -960,6 +961,15 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     ] );
                 }
 
+                function last_saved( $value, $option ) {
+                    if ( $option == 'woosw_settings' || $option == 'woosw_localization' ) {
+                        $value['_last_saved']    = current_time( 'timestamp' );
+                        $value['_last_saved_by'] = get_current_user_id();
+                    }
+
+                    return $value;
+                }
+
                 function admin_menu() {
                     add_submenu_page( 'wpclever', 'WPC Smart Wishlist', 'Smart Wishlist', 'manage_options', 'wpclever-woosw', [
                             $this,
@@ -1604,7 +1614,16 @@ if ( ! function_exists( 'woosw_init' ) ) {
                                         </tr>
                                         <tr class="submit">
                                             <th colspan="2">
-                                                <?php settings_fields( 'woosw_settings' ); ?><?php submit_button(); ?>
+                                                <div class="wpclever_submit">
+                                                    <?php
+                                                    settings_fields( 'woosw_settings' );
+                                                    submit_button( '', 'primary', 'submit', false );
+
+                                                    if ( function_exists( 'wpc_last_saved' ) ) {
+                                                        wpc_last_saved( self::get_settings() );
+                                                    }
+                                                    ?>
+                                                </div>
                                                 <a style="display: none;" class="wpclever_export"
                                                    data-key="woosw_settings"
                                                    data-name="settings"
