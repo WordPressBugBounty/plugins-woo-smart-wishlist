@@ -3,8 +3,8 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, wishlist, wait-list
 Tested up to: 6.9
-Version: 6.0.0
-Stable tag: 6.0.0
+Version: 6.0.1
+Stable tag: 6.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,9 @@ Example:
 `echo do_shortcode('[woosw id="99"]');`
 
 == Changelog ==
+
+= 6.0.1 =
+* Added: Show search input on the popup to filter products by name or note
 
 = 6.0.0 =
 * Updated: Optimized the code for better performance
