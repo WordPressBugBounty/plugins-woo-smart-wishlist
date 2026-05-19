@@ -3,7 +3,7 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buying later.
-Version: 6.0.2
+Version: 6.0.3
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
@@ -19,7 +19,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.2' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.3' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -32,9 +32,9 @@ defined( 'ABSPATH' ) || exit;
 // WPC Core
 require_once __DIR__ . '/includes/wpc-core/wpc-core.php';
 wpc_core_register( [
-	'file'    => __FILE__,
-	'version' => WOOSW_VERSION,
-	'prefix'  => 'woosw',
+        'file'    => __FILE__,
+        'version' => WOOSW_VERSION,
+        'prefix'  => 'woosw',
 ] );
 
 // plugin activate

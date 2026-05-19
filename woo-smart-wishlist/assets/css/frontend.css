@@ -582,8 +582,13 @@ body.rtl .woosw-items .woosw-item .woosw-item--note {
 .woosw-list .woosw-switcher {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-bottom: 30px;
+}
+
+.woosw-list .woosw-switcher .woosw-name {
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .woosw-list .woosw-actions {
