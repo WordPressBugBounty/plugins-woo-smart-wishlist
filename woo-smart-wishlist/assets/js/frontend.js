@@ -814,28 +814,8 @@
     }
 
     function woosw_load_data() {
-        if ($storage) {
-            try {
-                var data = JSON.parse(sessionStorage.getItem('woosw_data_' + key));
-
-                if (data.fragments) {
-                    woosw_refresh_fragments(data.fragments);
-                }
-
-                if (data.ids) {
-                    woosw_refresh_buttons(data.ids);
-                    woosw_refresh_ids(data.ids);
-                }
-
-                if (data.key && (key === null || key === undefined || key === '')) {
-                    Cookies.set('woosw_key', data.key, {expires: 7});
-                }
-            } catch (err) {
-                woosw_get_data();
-            }
-        } else {
-            woosw_get_data();
-        }
+        // don't use sessionStorage anymore
+        woosw_get_data();
     }
 
     function woosw_get_data() {
