@@ -71,7 +71,7 @@ if ( ! class_exists( 'Woosw_Helper' ) ) {
 					return true;
 				}
 			} else {
-				if ( isset( $_COOKIE['woosw_key'] ) && ( sanitize_text_field( $_COOKIE['woosw_key'] ) === $key ) ) {
+				if ( isset( $_COOKIE['woosw_key'] ) && ( sanitize_text_field( wp_unslash( $_COOKIE['woosw_key'] ) ) === $key ) ) {
 					return true;
 				}
 			}
@@ -133,7 +133,7 @@ if ( ! class_exists( 'Woosw_Helper' ) ) {
 				}
 
 				if ( isset( $_COOKIE['woosw_key'] ) ) {
-					return self::$key = sanitize_text_field( $_COOKIE['woosw_key'] );
+					return self::$key = sanitize_text_field( wp_unslash( $_COOKIE['woosw_key'] ) );
 				}
 
 				return self::$key = 'WOOSW';

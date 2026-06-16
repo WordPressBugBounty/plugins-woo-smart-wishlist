@@ -2,9 +2,9 @@
 Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, wishlist, wait-list
-Tested up to: 6.9
-Version: 6.0.4
-Stable tag: 6.0.4
+Tested up to: 7.0
+Version: 6.0.5
+Stable tag: 6.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,10 @@ Example:
 `echo do_shortcode('[woosw id="99"]');`
 
 == Changelog ==
+
+= 6.0.5 =
+* Updated: Optimized the code
+* Updated: Compatible with WP 7.0 & Woo 10.8
 
 = 6.0.4 =
 * Fixed: The button remains in the "added" state even after being removed from the wishlist
