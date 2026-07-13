@@ -3,23 +3,23 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buying later.
-Version: 6.0.5
+Version: 6.0.6
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
 Domain Path: /languages/
 Requires Plugins: woocommerce
-Requires at least: 6.2
+Requires at least: 5.9
 Tested up to: 7.0
 WC requires at least: 3.0
-WC tested up to: 10.8
+WC tested up to: 10.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.5' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.6' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -284,8 +284,8 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     }
 
                     $key        = Woosw_Helper::get_key();
-                    $product_id = absint( isset( $_REQUEST['add_to_wishlist'] ) ? (int) sanitize_text_field( wp_unslash( $_REQUEST['add_to_wishlist'] ) ) : 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-                    $product_id = absint( isset( $_REQUEST['add-to-wishlist'] ) ? (int) sanitize_text_field( wp_unslash( $_REQUEST['add-to-wishlist'] ) ) : $product_id ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                    $product_id = absint( isset( $_REQUEST['add_to_wishlist'] ) ? (int) sanitize_text_field( wp_unslash( $_REQUEST['add_to_wishlist'] ?? '' ) ) : 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                    $product_id = absint( isset( $_REQUEST['add-to-wishlist'] ) ? (int) sanitize_text_field( wp_unslash( $_REQUEST['add-to-wishlist'] ?? '' ) ) : $product_id ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
                     if ( $product_id ) {
                         if ( $key !== '#' && $key !== 'WOOSW' ) {
@@ -672,9 +672,9 @@ if ( ! function_exists( 'woosw_init' ) ) {
                             if ( get_query_var( 'woosw_id' ) ) {
                                 $key = get_query_var( 'woosw_id' );
                             } elseif ( ! empty( $_REQUEST['wid'] ) ) {
-                                $key = sanitize_text_field( wp_unslash( $_REQUEST['wid'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                                $key = sanitize_text_field( wp_unslash( $_REQUEST['wid'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                             } elseif ( ! empty( $_REQUEST['wl'] ) ) {
-                                $key = sanitize_text_field( wp_unslash( $_REQUEST['wl'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                                $key = sanitize_text_field( wp_unslash( $_REQUEST['wl'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                             } else {
                                 $key = Woosw_Helper::get_key();
                             }
@@ -797,7 +797,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                             </div>
                         </div>
                         <h2></h2>
-                        <?php if ( isset( $_GET['settings-updated'] ) && sanitize_text_field( wp_unslash( $_GET['settings-updated'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+                        <?php if ( isset( $_GET['settings-updated'] ) && sanitize_text_field( wp_unslash( $_GET['settings-updated'] ?? '' ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
                             <div class="notice notice-success is-dismissible">
                                 <p><?php esc_html_e( 'Settings updated.', 'woo-smart-wishlist' ); ?></p>
                             </div>
@@ -2757,7 +2757,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                     } elseif ( isset( $_POST['pid'] ) ) {
                         $pid      = absint( sanitize_text_field( wp_unslash( $_POST['pid'] ?? 0 ) ) );
                         $per_page = absint( apply_filters( 'woosw_quickview_per_page', 10 ) );
-                        $page     = absint( $_POST['page'] ?? 1 );
+                        $page     = absint( wp_unslash( $_POST['page'] ?? 1 ) );
                         $offset   = ( $page - 1 ) * $per_page;
                         $like_name = $wpdb->esc_like( 'woosw_list_' ) . '%';
                         $like_val  = '%i:' . $pid . ';%';
