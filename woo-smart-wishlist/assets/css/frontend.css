@@ -19,6 +19,12 @@
     -webkit-transform: rotate(360deg);
   }
 }
+.woosw-btn.woosw-disabled,
+.woosw-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .woosw-btn.woosw-added:before {
   content: "✓";
   margin-right: 5px;

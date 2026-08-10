@@ -60,42 +60,48 @@
 
     // woovr
     $(document).on('woovr_selected', function (e, selected, variations) {
-        var id = selected.attr('data-id');
-        var pid = selected.attr('data-pid');
+        if (woosw_vars.variations === 'yes') {
+            var id = selected.attr('data-id');
+            var pid = selected.attr('data-pid');
 
-        if (id > 0) {
-            $('.woosw-btn-' + pid).attr('data-id', id).removeClass('woosw-btn-added woosw-added');
+            if (id > 0) {
+                $('.woosw-btn-' + pid).attr('data-id', id).removeClass('woosw-btn-added woosw-added');
 
-            // refresh button
-            woosw_refresh_button_id(id);
-        } else {
-            $('.woosw-btn-' + pid).attr('data-id', pid).removeClass('woosw-btn-added woosw-added');
+                // refresh button
+                woosw_refresh_button_id(id);
+            } else {
+                $('.woosw-btn-' + pid).attr('data-id', pid).removeClass('woosw-btn-added woosw-added');
 
-            // refresh button
-            woosw_refresh_button_id(pid);
+                // refresh button
+                woosw_refresh_button_id(pid);
+            }
         }
     });
 
     // found variation
     $(document).on('found_variation', function (e, t) {
-        var product_id = $(e['target']).attr('data-product_id');
+        if (woosw_vars.variations === 'yes') {
+            var product_id = $(e['target']).attr('data-product_id');
 
-        // change id
-        $('.woosw-btn-' + product_id).attr('data-id', t.variation_id).removeClass('woosw-btn-added woosw-added');
+            // change id
+            $('.woosw-btn-' + product_id).attr('data-id', t.variation_id).removeClass('woosw-btn-added woosw-added');
 
-        // refresh button
-        woosw_refresh_button_id(t.variation_id);
+            // refresh button
+            woosw_refresh_button_id(t.variation_id);
+        }
     });
 
     // reset data
     $(document).on('reset_data', function (e) {
-        var product_id = $(e['target']).attr('data-product_id');
+        if (woosw_vars.variations === 'yes') {
+            var product_id = $(e['target']).attr('data-product_id');
 
-        // change id
-        $('.woosw-btn-' + product_id).attr('data-id', product_id).removeClass('woosw-btn-added woosw-added');
+            // change id
+            $('.woosw-btn-' + product_id).attr('data-id', product_id).removeClass('woosw-btn-added woosw-added');
 
-        // refresh button
-        woosw_refresh_button_id(product_id);
+            // refresh button
+            woosw_refresh_button_id(product_id);
+        }
     });
 
     // auto remove
@@ -121,6 +127,18 @@
     // add to wishlist
     $(document).on('click touch', '.woosw-btn', function (e) {
         var $this = $(this);
+
+        if ($this.hasClass('woosw-disabled') || $this.is(':disabled') || $this.attr('disabled')) {
+            var notice = $this.attr('title') || woosw_vars.login_message;
+
+            if (notice) {
+                woosw_notice(notice);
+            }
+
+            e.preventDefault();
+            return;
+        }
+
         var id = $this.attr('data-id');
         var pid = $this.attr('data-pid');
         var product_id = $this.attr('data-product_id');
@@ -159,17 +177,19 @@
                         woosw_change_count(response.count);
                     }
 
-                    if ($storage && response.data) {
-                        sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
-                    }
+                    if (response.data) {
+                        if ($storage) {
+                            sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
+                        }
 
-                    if (response.data.fragments) {
-                        woosw_refresh_fragments(response.data.fragments);
-                    }
+                        if (response.data.fragments) {
+                            woosw_refresh_fragments(response.data.fragments);
+                        }
 
-                    if (response.data.ids) {
-                        woosw_refresh_buttons(response.data.ids);
-                        woosw_refresh_ids(response.data.ids);
+                        if (response.data.ids) {
+                            woosw_refresh_buttons(response.data.ids);
+                            woosw_refresh_ids(response.data.ids);
+                        }
                     }
 
                     $(document.body).trigger('woosw_remove', [product_id]);
@@ -233,17 +253,19 @@
                     woosw_refresh_button_id(id);
                 }
 
-                if ($storage && response.data) {
-                    sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
-                }
+                if (response.data) {
+                    if ($storage) {
+                        sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
+                    }
 
-                if (response.data.fragments) {
-                    woosw_refresh_fragments(response.data.fragments);
-                }
+                    if (response.data.fragments) {
+                        woosw_refresh_fragments(response.data.fragments);
+                    }
 
-                if (response.data.ids) {
-                    woosw_refresh_buttons(response.data.ids);
-                    woosw_refresh_ids(response.data.ids);
+                    if (response.data.ids) {
+                        woosw_refresh_buttons(response.data.ids);
+                        woosw_refresh_ids(response.data.ids);
+                    }
                 }
 
                 $(document.body).trigger('woosw_add', [id]);
@@ -281,17 +303,19 @@
                 woosw_change_count(response.count);
             }
 
-            if ($storage && response.data) {
-                sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
-            }
+            if (response.data) {
+                if ($storage) {
+                    sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
+                }
 
-            if (response.data.fragments) {
-                woosw_refresh_fragments(response.data.fragments);
-            }
+                if (response.data.fragments) {
+                    woosw_refresh_fragments(response.data.fragments);
+                }
 
-            if (response.data.ids) {
-                woosw_refresh_buttons(response.data.ids);
-                woosw_refresh_ids(response.data.ids);
+                if (response.data.ids) {
+                    woosw_refresh_buttons(response.data.ids);
+                    woosw_refresh_ids(response.data.ids);
+                }
             }
 
             $(document.body).trigger('woosw_add', [product_id]);
@@ -333,17 +357,19 @@
                 woosw_change_count(response.count);
             }
 
-            if ($storage && response.data) {
-                sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
-            }
+            if (response.data) {
+                if ($storage) {
+                    sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
+                }
 
-            if (response.data.fragments) {
-                woosw_refresh_fragments(response.data.fragments);
-            }
+                if (response.data.fragments) {
+                    woosw_refresh_fragments(response.data.fragments);
+                }
 
-            if (response.data.ids) {
-                woosw_refresh_buttons(response.data.ids);
-                woosw_refresh_ids(response.data.ids);
+                if (response.data.ids) {
+                    woosw_refresh_buttons(response.data.ids);
+                    woosw_refresh_ids(response.data.ids);
+                }
             }
 
             $(document.body).trigger('woosw_remove', [product_id]);
@@ -377,17 +403,19 @@
                     woosw_change_count(response.count);
                 }
 
-                if ($storage && response.data) {
-                    sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
-                }
+                if (response.data) {
+                    if ($storage) {
+                        sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
+                    }
 
-                if (response.data.fragments) {
-                    woosw_refresh_fragments(response.data.fragments);
-                }
+                    if (response.data.fragments) {
+                        woosw_refresh_fragments(response.data.fragments);
+                    }
 
-                if (response.data.ids) {
-                    woosw_refresh_buttons(response.data.ids);
-                    woosw_refresh_ids(response.data.ids);
+                    if (response.data.ids) {
+                        woosw_refresh_buttons(response.data.ids);
+                        woosw_refresh_ids(response.data.ids);
+                    }
                 }
 
                 woosw_popup_loaded();
@@ -490,17 +518,19 @@
 
             $('#woosw_manage').html(response.content);
 
-            if ($storage && response.data) {
-                sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
-            }
+            if (response.data) {
+                if ($storage) {
+                    sessionStorage.setItem('woosw_data_' + response.data.key, JSON.stringify(response.data));
+                }
 
-            if (response.data.fragments) {
-                woosw_refresh_fragments(response.data.fragments);
-            }
+                if (response.data.fragments) {
+                    woosw_refresh_fragments(response.data.fragments);
+                }
 
-            if (response.data.ids) {
-                woosw_refresh_buttons(response.data.ids);
-                woosw_refresh_ids(response.data.ids);
+                if (response.data.ids) {
+                    woosw_refresh_buttons(response.data.ids);
+                    woosw_refresh_ids(response.data.ids);
+                }
             }
 
             $('#woosw_wishlist').removeClass('woosw-loaded');

@@ -3,7 +3,7 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buying later.
-Version: 6.0.6
+Version: 6.0.7
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
@@ -12,14 +12,14 @@ Requires Plugins: woocommerce
 Requires at least: 5.9
 Tested up to: 7.0
 WC requires at least: 3.0
-WC tested up to: 10.9
+WC tested up to: 11.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.6' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.7' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -636,10 +636,18 @@ if ( ! function_exists( 'woosw_init' ) ) {
                             $btn = $text;
                         }
 
+                        $extra_attrs = '';
+
+                        if ( ! is_user_logged_in() && ( Woosw_Helper::get_setting( 'disable_unauthenticated', 'no' ) === 'yes' ) ) {
+                            $class       .= ' woosw-disabled';
+                            $login_notice = Woosw_Helper::localization( 'login_message', esc_html__( 'Please log in to use the Wishlist!', 'woo-smart-wishlist' ) );
+                            $extra_attrs  .= ' disabled="disabled" title="' . esc_attr( $login_notice ) . '" alt="' . esc_attr( $login_notice ) . '"';
+                        }
+
                         if ( $attrs['type'] === 'link' ) {
-                            $output = '<a href="' . esc_url( '?add-to-wishlist=' . $attrs['id'] ) . '" class="' . esc_attr( $class ) . '" data-id="' . esc_attr( $attrs['id'] ) . '" data-product_name="' . esc_attr( $product_name ) . '" data-product_image="' . esc_attr( $product_image ) . '" rel="' . esc_attr( apply_filters( 'woosw_button_rel', 'nofollow' ) ) . '" aria-label="' . esc_attr( $text ) . '">' . $btn . '</a>';
+                            $output = '<a href="' . esc_url( '?add-to-wishlist=' . $attrs['id'] ) . '" class="' . esc_attr( $class ) . '" data-id="' . esc_attr( $attrs['id'] ) . '" data-product_name="' . esc_attr( $product_name ) . '" data-product_image="' . esc_attr( $product_image ) . '" rel="' . esc_attr( apply_filters( 'woosw_button_rel', 'nofollow' ) ) . '" aria-label="' . esc_attr( $text ) . '"' . $extra_attrs . '>' . $btn . '</a>';
                         } else {
-                            $output = '<button class="' . esc_attr( $class ) . '" data-id="' . esc_attr( $attrs['id'] ) . '" data-product_name="' . esc_attr( $product_name ) . '" data-product_image="' . esc_attr( $product_image ) . '" aria-label="' . esc_attr( $text ) . '">' . $btn . '</button>';
+                            $output = '<button class="' . esc_attr( $class ) . '" data-id="' . esc_attr( $attrs['id'] ) . '" data-product_name="' . esc_attr( $product_name ) . '" data-product_image="' . esc_attr( $product_image ) . '" aria-label="' . esc_attr( $text ) . '"' . $extra_attrs . '>' . $btn . '</button>';
                         }
                     }
 
@@ -836,6 +844,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                                 $disable_unauthenticated = Woosw_Helper::get_setting( 'disable_unauthenticated', 'no' );
                                 $auto_remove             = Woosw_Helper::get_setting( 'auto_remove', 'no' );
                                 $reload_count            = Woosw_Helper::get_setting( 'reload_count', 'no' );
+                                $variations              = Woosw_Helper::get_setting( 'variations', 'yes' );
                                 $enable_statistics       = Woosw_Helper::get_setting( 'enable_statistics', 'yes' );
                                 $enable_multiple         = Woosw_Helper::get_setting( 'enable_multiple', 'no' );
                                 $button_type             = Woosw_Helper::get_setting( 'button_type', 'button' );
@@ -911,6 +920,21 @@ if ( ! function_exists( 'woosw_init' ) ) {
                                                     </select> </label>
                                                 <span
                                                         class="description"><?php esc_html_e( 'Reload the count when opening the page?', 'woo-smart-wishlist' ); ?></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><?php esc_html_e( 'Wishlist variations', 'woo-smart-wishlist' ); ?></th>
+                                            <td>
+                                                <label> <select name="woosw_settings[variations]">
+                                                        <option value="yes" <?php selected( $variations, 'yes' ); ?>>
+                                                            <?php esc_html_e( 'Yes', 'woo-smart-wishlist' ); ?>
+                                                        </option>
+                                                        <option value="no" <?php selected( $variations, 'no' ); ?>>
+                                                            <?php esc_html_e( 'No', 'woo-smart-wishlist' ); ?>
+                                                        </option>
+                                                    </select> </label>
+                                                <span
+                                                        class="description"><?php esc_html_e( 'Wishlist selected variation instead of the main variable product.', 'woo-smart-wishlist' ); ?></span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2093,6 +2117,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                                     'page_myaccount'      => Woosw_Helper::get_setting( 'page_myaccount', 'yes' ),
                                     'menu_action'         => Woosw_Helper::get_setting( 'menu_action', 'open_page' ),
                                     'reload_count'        => Woosw_Helper::get_setting( 'reload_count', 'no' ),
+                                    'variations'          => Woosw_Helper::get_setting( 'variations', 'yes' ),
                                     'perfect_scrollbar'   => Woosw_Helper::get_setting( 'perfect_scrollbar', 'yes' ),
                                     'wishlist_url'        => Woosw_Helper::get_url(),
                                     'button_action'       => Woosw_Helper::get_setting( 'button_action', 'list' ),
@@ -2109,6 +2134,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                                     'button_loading_icon' => apply_filters( 'woosw_button_loading_icon', Woosw_Helper::get_setting( 'button_loading_icon', 'woosw-icon-4' ) ),
                                     'popup_search'        => Woosw_Helper::get_setting( 'popup_search', 'no' ),
                                     'search_placeholder'  => Woosw_Helper::localization( 'search_placeholder', esc_html__( 'Search by name or note...', 'woo-smart-wishlist' ) ),
+                                    'login_message'       => Woosw_Helper::localization( 'login_message', esc_html__( 'Please log in to use the Wishlist!', 'woo-smart-wishlist' ) ),
                             ]
                     );
                 }
