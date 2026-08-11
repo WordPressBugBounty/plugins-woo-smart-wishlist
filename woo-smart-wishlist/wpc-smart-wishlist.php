@@ -3,7 +3,7 @@
 Plugin Name: WPC Smart Wishlist for WooCommerce
 Plugin URI: https://wpclever.net/
 Description: WPC Smart Wishlist is a simple but powerful tool that can help your customer save products for buying later.
-Version: 6.0.7
+Version: 6.0.8
 Author: WPClever
 Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
@@ -19,7 +19,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.7' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.0.8' );
 ! defined( 'WOOSW_LITE' ) && define( 'WOOSW_LITE', __FILE__ );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
@@ -2732,7 +2732,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                         $count    = count( $products );
 
                         if ( count( $products ) > 0 ) {
-                            $user = $wpdb->get_results( $wpdb->prepare( 'SELECT user_id FROM `' . $wpdb->prefix . 'usermeta` WHERE `meta_key` = "woosw_keys" AND `meta_value` LIKE %s LIMIT 1', '%"' . $key . '"%' ) );
+                            $user = $wpdb->get_results( $wpdb->prepare( 'SELECT user_id FROM `' . $wpdb->usermeta . '` WHERE `meta_key` = "woosw_keys" AND `meta_value` LIKE %s LIMIT 1', '%"' . $key . '"%' ) );
 
                             echo '<div class="woosw-quickview-item">';
                             echo '<div class="woosw-quickview-item-image"><a href="' . esc_url( Woosw_Helper::get_url( $key, true ) ) . '" target="_blank">' . esc_html( $key ) . '</a></div>';
@@ -2828,7 +2828,7 @@ if ( ! function_exists( 'woosw_init' ) ) {
                                 $products       = get_option( $item->option_name );
                                 $products_count = count( $products );
                                 $key            = str_replace( 'woosw_list_', '', $item->option_name );
-                                $user           = $wpdb->get_results( $wpdb->prepare( 'SELECT user_id FROM `' . $wpdb->prefix . 'usermeta` WHERE `meta_key` = "woosw_keys" AND `meta_value` LIKE %s LIMIT 1', '%"' . $key . '"%' ) );
+                                $user           = $wpdb->get_results( $wpdb->prepare( 'SELECT user_id FROM `' . $wpdb->usermeta . '` WHERE `meta_key` = "woosw_keys" AND `meta_value` LIKE %s LIMIT 1', '%"' . $key . '"%' ) );
 
                                 echo '<div class="woosw-quickview-item">';
                                 echo '<div class="woosw-quickview-item-image"><a href="' . esc_url( Woosw_Helper::get_url( $key, true ) ) . '" target="_blank">' . esc_html( $key ) . '</a></div>';
