@@ -2,9 +2,8 @@
 Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, wishlist, wait-list
-Tested up to: 7.0
-Version: 6.0.9
-Stable tag: 6.0.9
+Tested up to: 7.1
+Stable tag: 6.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +97,10 @@ Example:
 `echo do_shortcode('[woosw id="99"]');`
 
 == Changelog ==
+
+= 6.1.0 =
+* Updated: Optimized the code
+* Updated: Compatible with WP 7.1 & Woo 11.1
 
 = 6.0.9 =
 * Fixed: Minor CSS/JS issue on the frontend
