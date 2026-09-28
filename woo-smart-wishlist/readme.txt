@@ -3,7 +3,7 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, wishlist, wait-list
 Tested up to: 7.1
-Stable tag: 6.1.0
+Stable tag: 6.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,6 @@ Visit our [live demo 01](https://demo.wpclever.net/woosw/ "live demo 01") or [li
 - Choose a menu to add the wishlist menu
 - Choose an action triggered by the wishlist menu
 - RTL support for better displaying right-to-left languages
-- Premium: Enable statistics
 - Premium: Enable multiple wishlists per user
 - Premium: Add note for each product
 - Premium: Lifetime update and dedicated support
@@ -97,6 +96,10 @@ Example:
 `echo do_shortcode('[woosw id="99"]');`
 
 == Changelog ==
+
+= 6.2.0 =
+* Added: Feature allowing wishlist renaming
+* Updated: New interface for the Settings page
 
 = 6.1.0 =
 * Updated: Optimized the code
