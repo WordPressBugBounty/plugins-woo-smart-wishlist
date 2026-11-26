@@ -3,7 +3,7 @@ Contributors: wpclever
 Donate link: https://wpclever.net
 Tags: woocommerce, wpc, wishlist, wait-list
 Tested up to: 7.1
-Stable tag: 6.2.1
+Stable tag: 6.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,6 +96,10 @@ Example:
 `echo do_shortcode('[woosw id="99"]');`
 
 == Changelog ==
+
+= 6.2.2 =
+* Fixed: Security issue, escaped user-controllable attributes (title, product name) before rendering them in notices
+* Fixed: Validated the URL scheme of the continue shopping button and the wishlist switcher
 
 = 6.2.1 =
 * Fixed: Added Secure and SameSite attributes consistently to the wishlist cookie across all PHP and JavaScript code paths

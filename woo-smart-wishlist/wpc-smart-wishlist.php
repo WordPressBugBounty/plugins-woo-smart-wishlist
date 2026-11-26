@@ -8,15 +8,15 @@ Author URI: https://wpclever.net
 Text Domain: woo-smart-wishlist
 Domain Path: /languages/
 Requires Plugins: woocommerce
-Version: 6.2.1
+Version: 6.2.2
 Requires at least: 5.9
 WC requires at least: 3.0
-WC tested up to: 11.2
+WC tested up to: 11.3
 */
 
 defined( 'ABSPATH' ) || exit;
 
-! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.2.1' );
+! defined( 'WOOSW_VERSION' ) && define( 'WOOSW_VERSION', '6.2.2' );
 ! defined( 'WOOSW_FILE' ) && define( 'WOOSW_FILE', __FILE__ );
 ! defined( 'WOOSW_URI' ) && define( 'WOOSW_URI', plugin_dir_url( __FILE__ ) );
 ! defined( 'WOOSW_DIR' ) && define( 'WOOSW_DIR', plugin_dir_path( __FILE__ ) );

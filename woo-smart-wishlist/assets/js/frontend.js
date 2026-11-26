@@ -47,7 +47,11 @@
     });
 
     $(document).on('change', '.woosw-switcher-dropdown', function () {
-        window.location = $(this).val();
+        var url = woosw_safe_url($(this).val());
+
+        if (url) {
+            window.location.href = url;
+        }
     });
 
     $(document).on('woosw_refresh_data', function () {
@@ -137,7 +141,9 @@
         var $this = $(this);
 
         if ($this.hasClass('woosw-disabled') || $this.is(':disabled') || $this.attr('disabled')) {
-            var notice = $this.attr('title') || woosw_vars.login_message;
+            // the title attribute is user-controllable (decoded by .attr()), escape it before rendering as HTML
+            var title = $this.attr('title');
+            var notice = title ? woosw_html_entities(title) : woosw_vars.login_message;
 
             if (notice) {
                 woosw_notice(notice);
@@ -307,7 +313,7 @@
                     }
 
                     if (add_response.notice != null) {
-                        woosw_notice(add_response.notice.replace('{name}', '<strong>' + product_name + '</strong>'));
+                        woosw_notice(add_response.notice.replace('{name}', '<strong>' + woosw_html_entities(product_name) + '</strong>'));
                     }
 
                     woosw_perfect_scrollbar();
@@ -321,7 +327,7 @@
                         theme: 'woosw',
                         position: woosw_vars.message_position,
                         image: product_image,
-                        text: add_response.notice.replace('{name}', '<strong>' + product_name + '</strong>'),
+                        text: add_response.notice.replace('{name}', '<strong>' + woosw_html_entities(product_name) + '</strong>'),
                     });
                 }
 
@@ -477,7 +483,7 @@
             }
 
             if (response.notice != null) {
-                woosw_notice(response.notice.replace('{name}', '<strong>' + product_name + '</strong>'));
+                woosw_notice(response.notice.replace('{name}', '<strong>' + woosw_html_entities(product_name) + '</strong>'));
             }
 
             if (response.count != null) {
@@ -626,10 +632,10 @@
 
     // continue
     $(document).on('click touch', '.woosw-continue', function (e) {
-        var url = $(this).attr('data-url');
+        var url = woosw_safe_url($(this).attr('data-url'));
         woosw_wishlist_hide();
 
-        if (url !== '') {
+        if (url) {
             window.location.href = url;
         }
 
@@ -1262,7 +1268,7 @@
     }
 
     function woosw_notice(notice) {
-        $('.woosw-notice').html(notice);
+        $('#woosw_wishlist .woosw-notice').html(notice);
         woosw_notice_show();
         setTimeout(function () {
             woosw_notice_hide();
@@ -1281,6 +1287,24 @@
         if (woosw_vars.perfect_scrollbar === 'yes') {
             jQuery('#woosw_wishlist .woosw-popup-content-mid').perfectScrollbar({theme: 'wpc'});
         }
+    }
+
+    function woosw_safe_url(url) {
+        // only allow http(s) URLs, block javascript:, data: and other schemes
+        if (!url) {
+            return '';
+        }
+
+        try {
+            var parsed = new URL(String(url), window.location.href);
+
+            if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+                return parsed.href;
+            }
+        } catch (err) {
+        }
+
+        return '';
     }
 
     function woosw_html_entities(str) {
@@ -1427,7 +1451,7 @@
                 }
 
                 if (response.notice != null) {
-                    woosw_notice(response.notice.replace('{name}', '<strong>' + product_name + '</strong>'));
+                    woosw_notice(response.notice.replace('{name}', '<strong>' + woosw_html_entities(product_name) + '</strong>'));
                 }
 
                 woosw_perfect_scrollbar();
@@ -1441,7 +1465,7 @@
                     theme: 'woosw',
                     position: woosw_vars.message_position,
                     image: product_image,
-                    text: response.notice.replace('{name}', '<strong>' + product_name + '</strong>'),
+                    text: response.notice.replace('{name}', '<strong>' + woosw_html_entities(product_name) + '</strong>'),
                 });
             }
 
